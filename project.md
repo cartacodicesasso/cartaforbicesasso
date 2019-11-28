@@ -1,5 +1,17 @@
 # Carta forbice sasso multiplayer online
 
+## Ultimo step
+
+Abbiamo fatto una chat con tutti.
+
+## Prossimo step
+
+Fare tre chat in cui a due a due si parla male di quello che non c'è.
+Le chat vengono generate su un endpoint che manda un messaggio con il nome del canale, con cui altri si possono iscrivere.
+
+- /match => messaggio con `matchId`
+- /match/:matchId => join match
+
 ## Descrizione
 
 Carta forbice sasso multiplayer. Back-end .NET, front-end React, model sul server.
@@ -35,8 +47,8 @@ Partite al meglio di 7.
     - Player2CurrentMove
 - [ ] Deve esistere un `MatchContext : DbContext`
 - [ ] MatchContext deve avere un `DbSet<Match>`
-- [ ] Deve esistere un `MatchHub : Hub`
-- [ ] Deve esistere un metodo `MatchHub.SendMove`
+- [x] Deve esistere un `MatchHub : Hub`
+- [x] Deve esistere un metodo `MatchHub.SendMove`
 - [ ] Il metodo _SendMove_ deve ricevere i seguenti parametri
     - _Player_ che fa la mossa
     - _Mossa_ inviata
