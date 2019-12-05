@@ -2,15 +2,11 @@
 
 ## Ultimo step
 
-Abbiamo fatto una chat con tutti.
+Possiamo creare e distruggere gruppi e partite.
 
 ## Prossimo step
 
-Fare tre chat in cui a due a due si parla male di quello che non c'è.
-Le chat vengono generate su un endpoint che manda un messaggio con il nome del canale, con cui altri si possono iscrivere.
-
-- /match => messaggio con `matchId`
-- /match/:matchId => join match
+Potremo unirci a una partita esistente se ha un solo giocatore.
 
 ## Descrizione
 
@@ -30,14 +26,14 @@ Partite al meglio di 7.
 
 ## Requisiti
 
-- [ ] Dev'esserci una pagina `/` che mostra un codice generato random
-- [ ] Dev'esserci una pagina `/{matchId}` che accede alla partita
+- [ ] Dev'esserci una pagina `/` che mostra il matchId
+- [ ] Dev'esserci una pagina `/?match={matchId}` che accede alla partita
 - [ ] Se la partita contiene già due giocatori, cicciah
 - [ ] Il primo che arriva a 4 punti vince
 
 ## Requisiti interni
 
-- [ ] Deve esistere un model `Match` con la seguente struttura
+- [x] Deve esistere un model `Match` con la seguente struttura
     - Id
     - Player1
     - Player2
@@ -45,8 +41,8 @@ Partite al meglio di 7.
     - Score2
     - Player1CurrentMove
     - Player2CurrentMove
-- [ ] Deve esistere un `MatchContext : DbContext`
-- [ ] MatchContext deve avere un `DbSet<Match>`
+- [x] Deve esistere un `MatchContext : DbContext`
+- [x] MatchContext deve avere un `DbSet<Match>`
 - [x] Deve esistere un `MatchHub : Hub`
 - [x] Deve esistere un metodo `MatchHub.SendMove`
 - [ ] Il metodo _SendMove_ deve ricevere i seguenti parametri
