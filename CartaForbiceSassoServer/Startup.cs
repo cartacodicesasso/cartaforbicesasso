@@ -38,6 +38,7 @@ namespace CartaForbiceSassoServer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<MatchHub>("/match");
+                endpoints.MapControllers();
             });
         }
     }
