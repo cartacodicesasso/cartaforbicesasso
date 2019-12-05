@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CartaForbiceSassoServer.Hubs;
+using CartaForbiceSassoServer.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -20,6 +21,7 @@ namespace CartaForbiceSassoServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSignalR();
+            services.AddDbContext<MatchContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
