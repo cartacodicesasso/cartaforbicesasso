@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using CartaForbiceSassoServer.Models;
 using Microsoft.AspNetCore.SignalR;
@@ -48,14 +49,51 @@ namespace CartaForbiceSassoServer.Hubs
             };
 
             database.Matches.Add(match);
-            await database.SaveChangesAsync();
+
+            try
+            {
+                await database.SaveChangesAsync();
+            }
+            catch
+            {
+                await Clients.Caller.SendAsync("Error", MatchErrorType.MatchCreationFailed);
+                return;
+            }
 
             await Groups.AddToGroupAsync(Context.ConnectionId, match.Id);
+
+            await Clients.Caller.SendAsync("MatchCreated", match.Id);
+        }
+
+        public async Task JoinMatch(string matchId)
+        {
+            var match = await database.Matches.FindAsync(matchId);
+
+            if (match == null)
+            {
+                await Clients.Caller.SendAsync("Error", MatchErrorType.MatchNotFound);
+                return;
+            }
+
+            match.Player2 = Context.ConnectionId;
+
+            database.Matches.Update(match);
+            await database.SaveChangesAsync();
+
+            await Groups.AddToGroupAsync(Context.ConnectionId, matchId);
+            
+            await Clients.Group(matchId).SendAsync("BeginMatch");
         }
 
         public async Task SendMove(string player, string move)
         {
             await Clients.All.SendAsync("ReceiveMove", player, move);
         }
+    }
+
+    public static class MatchErrorType
+    {
+        public const string MatchNotFound = "MatchNotFound";
+        public const string MatchCreationFailed = "MatchCreationFailed";
     }
 }
