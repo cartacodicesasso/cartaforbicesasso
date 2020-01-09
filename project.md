@@ -2,12 +2,15 @@
 
 ## Ultimo step
 
-Possiamo unirci a una partita esistente.
+C'è un'interfaccia per invitare e unirsi alle partite.
 
 ## Prossimo step
 
-- Potremo unirci a una partita esistente **se ha un solo giocatore**.
-- Frontend: ci sarà un'interfaccia che mostra il match ID, copia il match ID nella clipboard, mostra i messaggi di errore.
+- Frontend: refactoring con stati CSS?
+- Mostrare i messaggi di errore
+- Gameplay con calma
+
+🖐️✌️👊
 
 ## Descrizione
 
@@ -29,7 +32,7 @@ Partite al meglio di 7.
 
 - [x] Dev'esserci una pagina `/` che mostra il matchId
 - [x] Dev'esserci una pagina `/?match={matchId}` che accede alla partita
-- [ ] Se la partita contiene già due giocatori, cicciah
+- [x] Se la partita contiene già due giocatori, cicciah
 - [ ] Il primo che arriva a 4 punti vince
 
 ## Requisiti interni

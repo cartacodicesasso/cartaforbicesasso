@@ -75,6 +75,12 @@ namespace CartaForbiceSassoServer.Hubs
                 return;
             }
 
+            if (!String.IsNullOrWhiteSpace(match.Player2))
+            {
+                await Clients.Caller.SendAsync("Error", MatchErrorType.Cicciah);
+                return;
+            }
+
             match.Player2 = Context.ConnectionId;
 
             database.Matches.Update(match);
@@ -95,5 +101,6 @@ namespace CartaForbiceSassoServer.Hubs
     {
         public const string MatchNotFound = "MatchNotFound";
         public const string MatchCreationFailed = "MatchCreationFailed";
+        public const string Cicciah = "Cicciah";
     }
 }

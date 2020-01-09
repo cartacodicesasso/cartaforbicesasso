@@ -8,5 +8,27 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aspnet-signalr/1.1.4/signalr.min.js"></script>
     <script src="./app.js"></script>
   </head>
-  <body></body>
+  <body>
+    <p id="before-match-creation" style="display: none">
+      Prepararsi alla battaglia&hellip;
+    </p>
+    
+    <p id="match-created" style="display: none">
+      La partita è stata creata!<br>
+      <button id="copy-match-id">Invita un avversario</button>
+    </p>
+
+    <div id="join-match">
+      <p>Entra in battaglia</p>
+  
+      <form id="join-match-form">
+        <label for="match-id">
+          <span>Link</span>
+          <input name="match-id" type="text">
+        </label>
+        
+        <input type="submit" value="Partecipa">
+      </form>
+    </div>
+  </body>
 </html>
