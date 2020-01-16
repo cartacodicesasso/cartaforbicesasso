@@ -2,13 +2,12 @@
 
 ## Ultimo step
 
-C'è un'interfaccia per invitare e unirsi alle partite.
+Abbiamo degli stati CSS e un routing.
 
 ## Prossimo step
 
-- Frontend: refactoring con stati CSS?
-- Mostrare i messaggi di errore
-- Gameplay con calma
+- Layout applicazione
+- Stile della pagina menù
 
 🖐️✌️👊
 
