@@ -1,8 +1,17 @@
+html, body {
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     -webkit-font-smoothing: antialiased;
     font-family: sans-serif;
     line-height: 1.3;
-    padding: 0;
+    background-image: url('best-background-ever.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 
 body * + * {
@@ -11,6 +20,51 @@ body * + * {
 
 body > * {
     margin-top: 0;
+}
+
+h1 {
+    text-align: center;
+    text-shadow: -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff, 2px 2px 0 #fff;
+
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0.67em;
+    padding-bottom: 0.67em;
+}
+
+#title-container {
+    box-sizing: border-box;
+    border-top: 12px solid black;
+    border-bottom: 12px solid black;
+    background: yellow;
+}
+
+#copy-match-container {
+    display: flex;
+    flex-direction: column;
+}
+
+#copy-match-container > button {
+    width: 90vw;
+    max-width: 500px;
+    height: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 0.75);
+}
+
+#copy-match-container > button:hover {
+    background-color: #ff00ff;
+    color: yellow;
+}
+
+#copy-match-container > button:active {
+    box-shadow: none;
+    position: relative;
+    top: 8px;
+    left: 8px;
+    background-color: yellow;
+    color: black;
 }
 
 .page {
@@ -31,9 +85,12 @@ body > * {
 
 #match-started-content, 
 #match-created-content, 
-#before-match-creation-content,
-body.match-started-container #join-match-content {
+#before-match-creation-content {
     display: none;
+}
+
+#match-created-content {
+    margin-top: 0;
 }
 
 body.match-started-container #match-started-content,
@@ -44,7 +101,7 @@ body.before-match-creation-container #before-match-creation-content {
 
 button, input[type=submit] {
     border: none;
-    background-color: #ddd;
+    background-color: #fff;
     font-family: inherit;
     font-size: 12px;
     font-weight: bold;
@@ -55,16 +112,52 @@ button, input[type=submit] {
     display: block;
     padding: .5em 1em;
     border-radius: 2px;
+    cursor: pointer;
+}
+
+@media all and (pointer: fine) {
+    button, input[type=submit] {
+        outline: none;
+    }
+}
+
+.error-toast-container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    width: calc(100vw - 16px);
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-bottom: 8px;
 }
 
 #error-toast {
-    
+    position: relative;
+    background: #fff;
+    transform: translate3d(0, 72px, 0);
+    visibility: hidden;
+    padding: 1em;
+    text-align: center;
+    font-size: 1.2rem;
+    box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 0.75);
+    transition: transform 2s linear, visibility 2s linear;
+}
+
+#error-toast > p {
+    margin: 0;
+}
+
+#error-toast.visible {
+    visibility: visible;
+    transform: translate3d(0, 0, 0);
+    transition: transform 2s linear, visibility 0 linear;
 }
 
 #error-toast.error {
     color: red;
-}
-
-#error-toast.visible {
-    display: block;
 }

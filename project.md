@@ -2,12 +2,12 @@
 
 ## Ultimo step
 
-Abbiamo degli stati CSS e un routing.
+Brutal design.
 
 ## Prossimo step
 
-- Layout applicazione
-- Stile della pagina menù
+- More brutal design
+- Gameplay con calma
 
 🖐️✌️👊
 

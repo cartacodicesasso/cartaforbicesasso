@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
           navigator.clipboard
           .writeText(`${location.origin}?match=${matchId}`)
           .then(
-            () => showToastMessage('Link copiato') // TODO: temporary
+            () => showToastMessage('Link copiato')
           )
         })
 
@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const toastDiv = document.getElementById('error-toast')
   
-  function showToastMessage(msg, time = 3000, isError = false) {
+  function showToastMessage(msg, time = 5000, isError = false) {
     toastDiv.classList.add('visible')
     isError && toastDiv.classList.add('error')
     toastDiv.firstElementChild.innerHTML = msg
