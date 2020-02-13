@@ -7,9 +7,16 @@
     <title>Carta forbice sasso</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aspnet-signalr/1.1.4/signalr.min.js"></script>
     <script src="./app.js"></script>
+    <script src="./background.js"></script>
     <link rel="stylesheet" href="./styles.css">
   </head>
   <body>
+    <div id="background">
+      <canvas id="canvas"></canvas>
+      <div></div>
+    </div>
+
+
     <div class="page" id="game">
       <p>game-page</p>
     </div>
@@ -18,25 +25,23 @@
       <p>game-over-page</p>
     </div>
 
-    <div class="page default" id="menu">
-      <p id="before-match-creation-content">
-        Prepararsi alla battaglia&hellip;
-      </p>
-      
-      <div id="match-created-content">
-        <div id="title-container">
-          <h1>Evviva carta forbice sasso!</h1>
-        </div>
-        
-        <div id="copy-match-container">
-          <button id="copy-match-id">Condividi link partita</button>
-        </div>
+    <div class="page" id="match-created">
+      <div class="title">
+        <h1>Evviva carta forbice sasso!</h1>
+      </div>
+
+      <div id="copy-match-container">
+        <button id="copy-match-id">Condividi link partita</button>
       </div>
     </div>
-    
+
+    <div class="page default title" id="home">
+      <h1>Prepararsi alla battaglia&hellip;</h1>
+    </div>
+
     <div class="error-toast-container">
       <div id="error-toast">
-        <p>Messaggi di errore qui Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium, maxime? Eaque soluta minus sapiente exercitationem voluptate nostrum, ab cupiditate fugit.</p>
+        <p></p>
       </div>
     </div>
   </body>

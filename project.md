@@ -2,12 +2,12 @@
 
 ## Ultimo step
 
-Brutal design.
+Navigazione, sfondo, definizione del gameplay.
 
 ## Prossimo step
 
-- More brutal design
-- Gameplay con calma
+- Refactoring del background
+- Implementazione del gameplay
 
 🖐️✌️👊
 
@@ -26,6 +26,25 @@ Carta forbice sasso multiplayer. Back-end .NET, front-end React, model sul serve
 7. Torna a 4.
 
 Partite al meglio di 7.
+
+## Gameplay
+
+> Definizione:
+> - io-player: il giocatore che sta giocando
+> - tu-player: il suo avversario
+
+### UI
+
+- [ ] La UI dev'essere divisa in due righe
+- [ ] Il tu-player è nella riga sopra
+- [ ] Per ogni player, dev'esserci il punteggio corrente
+- [ ] Sull'io-player, dev'esserci una pulsantiera per scegliere la mossa
+
+### Flusso
+
+- [ ] Ogni player sceglie la sua mossa
+- [ ] Alla scelta della mossa, i pulsanti si congelano
+- [ ] Quando entrambi hanno scelto la mossa, viene mostrato il risultato e i pulsanti si scongelano
 
 ## Requisiti
 

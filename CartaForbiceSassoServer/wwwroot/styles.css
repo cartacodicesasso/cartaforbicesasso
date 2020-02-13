@@ -8,10 +8,6 @@ body {
     -webkit-font-smoothing: antialiased;
     font-family: sans-serif;
     line-height: 1.3;
-    background-image: url('best-background-ever.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
 }
 
 body * + * {
@@ -22,21 +18,59 @@ body > * {
     margin-top: 0;
 }
 
-h1 {
-    text-align: center;
-    text-shadow: -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff, 2px 2px 0 #fff;
-
-    margin-top: 0;
-    margin-bottom: 0;
-    padding-top: 0.67em;
-    padding-bottom: 0.67em;
+#canvas {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
 }
 
-#title-container {
+#background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+#background canvas {
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+}
+
+#background div {
+    width: 100%;
+    height: 100%;
+
+    margin: 0px;
+
+    background-image: url('emoji.png');
+    background-repeat: no-repeat;
+    background-size: initial;
+    background-position: center;
+}
+
+h1 {
+    text-align: center;
+    color: #000;
+    /* margin-top: 0;
+    margin-bottom: 0; */
+    margin-top: 0.67em;
+    margin-bottom: 0.67em;
+}
+
+.title {
     box-sizing: border-box;
     border-top: 12px solid black;
     border-bottom: 12px solid black;
     background: yellow;
+    text-align: center;
+}
+
+.title > * {
+    display: inline-block;
+    border: 2px solid black;
+    padding: 4px 8px;
 }
 
 #copy-match-container {
@@ -83,20 +117,22 @@ h1 {
     display: none;
 }
 
-#match-started-content, 
-#match-created-content, 
-#before-match-creation-content {
+/* #match-started-content,
+#match-created {
     display: none;
-}
+} */
 
-#match-created-content {
+#match-created {
     margin-top: 0;
 }
 
 body.match-started-container #match-started-content,
-body.match-created-container #match-created-content,
-body.before-match-creation-container #before-match-creation-content {
+body.match-created-container #match-created {
     display: block;
+}
+
+body.match-created-container #before-match-creation-content {
+    display: none;
 }
 
 button, input[type=submit] {
@@ -145,7 +181,7 @@ button, input[type=submit] {
     text-align: center;
     font-size: 1.2rem;
     box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 0.75);
-    transition: transform 2s linear, visibility 2s linear;
+    /* transition: transform 2s linear, visibility 2s linear; */
 }
 
 #error-toast > p {
@@ -155,7 +191,7 @@ button, input[type=submit] {
 #error-toast.visible {
     visibility: visible;
     transform: translate3d(0, 0, 0);
-    transition: transform 2s linear, visibility 0 linear;
+    /* transition: transform 2s linear, visibility 0 linear; */
 }
 
 #error-toast.error {

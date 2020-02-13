@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const buttonCopyMatchId = document.getElementById('copy-match-id')
   const formJoinMatch = document.getElementById('join-match-form')
-  
+
   const connection = new signalR.HubConnectionBuilder().withUrl('/socket').build()
   const query = window.location.search.substring(1)
   .split('&')
@@ -9,29 +9,30 @@ document.addEventListener('DOMContentLoaded', () => {
   .reduce((res, [key, value]) => Object.assign(res, {
     [key]: value
   }), {})
-  
+
   connection.start()
   .then(() => {
     if (query.match) {
       connection
       .invoke('JoinMatch', query.match)
       .catch(e => console.log(e))
-      
+
       connection.on('BeginMatch', () => {
-        document.body.className = 'match-started-container'
-        showToastMessage('Match started!')
+        // document.body.className = 'match-started-container'
+        navigateToPage('game')
       })
     } else {
-      document.body.className = 'before-match-creation-container'
+      // document.body.className = 'before-match-creation-container'
 
       connection
       .invoke('CreateMatch')
       .catch(e => console.log(e))
-      
-      connection.on('MatchCreated', matchId => {
-        document.body.className = 'match-created-container'
 
-        buttonCopyMatchId && buttonCopyMatchId.addEventListener('click', e => {
+      connection.on('MatchCreated', matchId => {
+        // document.body.className = 'match-created-container'
+        navigateToPage('match-created')
+
+        buttonCopyMatchId && buttonCopyMatchId.addEventListener('click', _ => {
           navigator.clipboard
           .writeText(`${location.origin}?match=${matchId}`)
           .then(
@@ -47,15 +48,15 @@ document.addEventListener('DOMContentLoaded', () => {
         })
 
         connection.on('BeginMatch', () => {
-          document.body.className = 'match-started-container'
-          showToastMessage('Match started!')
+          // document.body.className = 'match-started-container'
+          navigateToPage('game')
         })
       })
     }
-    
-    connection.on('Error', error => {  
+
+    connection.on('Error', error => {
       let msg = ''
-      
+
       switch (error) {
         case 'MatchNotFound':
           msg = 'Match not found'
@@ -77,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
   .catch(e => console.log(e))
 
   const toastDiv = document.getElementById('error-toast')
-  
+
   function showToastMessage(msg, time = 5000, isError = false) {
     toastDiv.classList.add('visible')
     isError && toastDiv.classList.add('error')
@@ -89,3 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, time)
   }
 })
+
+function navigateToPage(pageName) {
+  window.location.hash = pageName
+}
