@@ -1,3 +1,7 @@
+document.onselectstart = () => false;
+document.oncontextmenu = () => false;
+document.ondragstart = () => false;
+
 document.addEventListener('DOMContentLoaded', () => {
   const buttonCopyMatchId = document.getElementById('copy-match-id')
   const formJoinMatch = document.getElementById('join-match-form')
@@ -10,6 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
     [key]: value
   }), {})
 
+  let isYouPlayerThinking = false
+  
   connection.start()
   .then(() => {
     if (query.match) {
@@ -18,25 +24,23 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch(e => console.log(e))
 
       connection.on('BeginMatch', () => {
-        // document.body.className = 'match-started-container'
         navigateToPage('game')
+        isYouPlayerThinking = true
+        requestAnimationFrame(() => messWithYouPlayerMoves())
       })
     } else {
-      // document.body.className = 'before-match-creation-container'
-
       connection
       .invoke('CreateMatch')
       .catch(e => console.log(e))
 
       connection.on('MatchCreated', matchId => {
-        // document.body.className = 'match-created-container'
         navigateToPage('match-created')
 
         buttonCopyMatchId && buttonCopyMatchId.addEventListener('click', _ => {
           navigator.clipboard
           .writeText(`${location.origin}?match=${matchId}`)
           .then(
-            () => showToastMessage('Link copiato')
+            () => showToastMessage('Link copiato. Passalo a chi vuoi. Al suo ingresso, la partita comincerà automaticamente.', 0)
           )
         })
 
@@ -48,8 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
         })
 
         connection.on('BeginMatch', () => {
-          // document.body.className = 'match-started-container'
           navigateToPage('game')
+          isYouPlayerThinking = true
+          requestAnimationFrame(() => messWithYouPlayerMoves())
         })
       })
     }
@@ -78,17 +83,38 @@ document.addEventListener('DOMContentLoaded', () => {
   .catch(e => console.log(e))
 
   const toastDiv = document.getElementById('error-toast')
+  
+  document.getElementById('toast-close-button').addEventListener(
+    'click', () => toastDiv.classList.remove('visible')
+  )
+
+  const youPlayerMovesEls = document.getElementById('you-player').getElementsByClassName('move')
+
+  function messWithYouPlayerMoves() {
+    const index = Math.round(Math.random() * (youPlayerMovesEls.length - 1))
+    
+    Array.from(youPlayerMovesEls).forEach(el => el.classList.remove('selected'))
+    youPlayerMovesEls.item(index).classList.add('selected')
+
+    isYouPlayerThinking && setTimeout(messWithYouPlayerMoves, 100)
+  }
 
   function showToastMessage(msg, time = 5000, isError = false) {
     toastDiv.classList.add('visible')
     isError && toastDiv.classList.add('error')
     toastDiv.firstElementChild.innerHTML = msg
 
-    setTimeout(() => {
+    time && setTimeout(() => {
       toastDiv.classList.remove('visible')
       isError && toastDiv.classList.remove('error')
     }, time)
   }
+
+  Array.from(document.querySelectorAll('#me-player .move'))
+  .forEach((move, _, moves) => move.addEventListener('click', () => {
+    moves.forEach(move => move.classList.remove('selected'));
+    move.classList.add('selected')
+  }))
 })
 
 function navigateToPage(pageName) {

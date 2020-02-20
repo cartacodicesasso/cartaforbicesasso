@@ -2,18 +2,18 @@
 
 ## Ultimo step
 
-Navigazione, sfondo, definizione del gameplay.
+Layout game page implementato
 
 ## Prossimo step
 
 - Refactoring del background
-- Implementazione del gameplay
+- Logiche del gameplay
 
 🖐️✌️👊
 
 ## Descrizione
 
-Carta forbice sasso multiplayer. Back-end .NET, front-end React, model sul server.
+Carta forbice sasso multiplayer. Back-end .NET, front-end vanilla, model sul server.
 
 ## Flusso
 
@@ -35,9 +35,9 @@ Partite al meglio di 7.
 
 ### UI
 
-- [ ] La UI dev'essere divisa in due righe
-- [ ] Il tu-player è nella riga sopra
-- [ ] Per ogni player, dev'esserci il punteggio corrente
+- [x] La UI dev'essere divisa in due righe
+- [x] Il tu-player è nella riga sopra
+- [x] Per ogni player, dev'esserci il punteggio corrente
 - [ ] Sull'io-player, dev'esserci una pulsantiera per scegliere la mossa
 
 ### Flusso

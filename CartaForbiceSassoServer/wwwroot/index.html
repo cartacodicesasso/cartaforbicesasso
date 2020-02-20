@@ -13,12 +13,26 @@
   <body>
     <div id="background">
       <canvas id="canvas"></canvas>
-      <div></div>
     </div>
 
-
     <div class="page" id="game">
-      <p>game-page</p>
+      <div id="you-player">
+        <div class="score">❤❤❤</div>
+        <div class="moves">
+          <img class="move" src="icon-rock.png" />
+          <img class="move" src="icon-paper.png" />
+          <img class="move" src="icon-scissors.png" />
+        </div>
+      </div>
+      <div class="horizontal-divider"></div>
+      <div id="me-player">
+        <div class="score">❤❤❤</div>
+        <div class="moves">
+          <img class="move" src="icon-rock.png" />
+          <img class="move" src="icon-paper.png" />
+          <img class="move" src="icon-scissors.png" />
+        </div>
+      </div>
     </div>
 
     <div class="page" id="game-over">
@@ -33,6 +47,8 @@
       <div id="copy-match-container">
         <button id="copy-match-id">Condividi link partita</button>
       </div>
+
+      <div id="hands"></div>
     </div>
 
     <div class="page default title" id="home">
@@ -42,6 +58,7 @@
     <div class="error-toast-container">
       <div id="error-toast">
         <p></p>
+        <span id="toast-close-button">&times;</span>
       </div>
     </div>
   </body>
