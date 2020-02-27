@@ -10,6 +10,7 @@ namespace CartaForbiceSassoServer.Hubs
     public class MatchHub : Hub
     {
         private readonly MatchContext database;
+        private readonly string[] moves = new string[] { "rock", "paper", "scissors" };
 
         public MatchHub(MatchContext database)
         {
@@ -27,14 +28,14 @@ namespace CartaForbiceSassoServer.Hubs
 
             database.Remove(match);
             await database.SaveChangesAsync();
-            
+
             await Clients.Group(match.Id).SendAsync("GameOver");
 
             if (match.Player1 != null)
             {
                 await Groups.RemoveFromGroupAsync(match.Player1, match.Id);
             }
-            
+
             if (match.Player2 != null)
             {
                 await Groups.RemoveFromGroupAsync(match.Player2, match.Id);
@@ -82,18 +83,74 @@ namespace CartaForbiceSassoServer.Hubs
             }
 
             match.Player2 = Context.ConnectionId;
+            match.Score1 = 3;
+            match.Score2 = 3;
 
             database.Matches.Update(match);
             await database.SaveChangesAsync();
 
             await Groups.AddToGroupAsync(Context.ConnectionId, matchId);
-            
+
             await Clients.Group(matchId).SendAsync("BeginMatch");
         }
 
-        public async Task SendMove(string player, string move)
+        public async Task SendMove(string move)
         {
-            await Clients.All.SendAsync("ReceiveMove", player, move);
+            var match = database.Matches.FirstOrDefault(m => m.Player1 == Context.ConnectionId || m.Player2 == Context.ConnectionId);
+
+            if (match == null)
+            {
+                return;
+            }
+
+            if (match.Player1 == Context.ConnectionId)
+            {
+                match.Player1CurrentMove = move;
+            }
+            else
+            {
+                match.Player2CurrentMove = move;
+            }
+
+            if (match.Player1CurrentMove == null || match.Player2CurrentMove == null)
+            {
+                database.Matches.Update(match);
+                await database.SaveChangesAsync();
+                return;
+            }
+
+            var winner = match.Player1CurrentMove == match.Player2CurrentMove ? "even" : (
+                moves[(Array.IndexOf(moves, match.Player1CurrentMove) + 1) % 3] == match.Player2CurrentMove ? "player1" : "player2"
+            );
+
+            var rr = "RoundResult";
+            string player1Result = "even";
+            string player2Result = "even";
+
+            switch (winner)
+            {
+                case "player1":
+                    player1Result = "win";
+                    player2Result = "lose";
+                    match.Score2--;
+                    break;
+                case "player2":
+                    player1Result = "lose";
+                    player2Result = "win";
+                    match.Score1--;
+                    break;
+            }
+
+            match.Player1CurrentMove = null;
+            match.Player2CurrentMove = null;
+
+            database.Matches.Update(match);
+            await database.SaveChangesAsync();
+
+            var p1 = Clients.Client(match.Player1).SendAsync(rr, player1Result, match.Score1, match.Score2);
+            var p2 = Clients.Client(match.Player2).SendAsync(rr, player2Result, match.Score2, match.Score1);
+
+            await Task.WhenAll(new Task[] { p1, p2 });
         }
     }
 

@@ -2,12 +2,13 @@
 
 ## Ultimo step
 
-Layout game page implementato
+Il backend gestisce i round.
 
 ## Prossimo step
 
 - Refactoring del background
-- Logiche del gameplay
+- Implementare la fine del match (backend)
+- Implementare gli step mancanti nel frontend
 
 🖐️✌️👊
 
@@ -38,12 +39,12 @@ Partite al meglio di 7.
 - [x] La UI dev'essere divisa in due righe
 - [x] Il tu-player è nella riga sopra
 - [x] Per ogni player, dev'esserci il punteggio corrente
-- [ ] Sull'io-player, dev'esserci una pulsantiera per scegliere la mossa
+- [x] Sull'io-player, dev'esserci una pulsantiera per scegliere la mossa
 
 ### Flusso
 
-- [ ] Ogni player sceglie la sua mossa
-- [ ] Alla scelta della mossa, i pulsanti si congelano
+- [x] Ogni player sceglie la sua mossa
+- [x] Alla scelta della mossa, i pulsanti si congelano
 - [ ] Quando entrambi hanno scelto la mossa, viene mostrato il risultato e i pulsanti si scongelano
 
 ## Requisiti
@@ -51,7 +52,7 @@ Partite al meglio di 7.
 - [x] Dev'esserci una pagina `/` che mostra il matchId
 - [x] Dev'esserci una pagina `/?match={matchId}` che accede alla partita
 - [x] Se la partita contiene già due giocatori, cicciah
-- [ ] Il primo che arriva a 4 punti vince
+- [ ] Il primo che arriva a 0 cuori perde
 
 ## Requisiti interni
 
@@ -67,7 +68,6 @@ Partite al meglio di 7.
 - [x] MatchContext deve avere un `DbSet<Match>`
 - [x] Deve esistere un `MatchHub : Hub`
 - [x] Deve esistere un metodo `MatchHub.SendMove`
-- [ ] Il metodo _SendMove_ deve ricevere i seguenti parametri
-    - _Player_ che fa la mossa
+- [x] Il metodo _SendMove_ deve ricevere i seguenti parametri
     - _Mossa_ inviata
-- [ ] Il metodo _SendMove_ salva la mossa e se già presente un'altra, assegna il punteggio e azzera le mosse
+- [x] Il metodo _SendMove_ salva la mossa e se già presente un'altra, assegna il punteggio e azzera le mosse

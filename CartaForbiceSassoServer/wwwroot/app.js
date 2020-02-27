@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }), {})
 
   let isYouPlayerThinking = false
-  
+
   connection.start()
   .then(() => {
     if (query.match) {
@@ -83,16 +83,31 @@ document.addEventListener('DOMContentLoaded', () => {
   .catch(e => console.log(e))
 
   const toastDiv = document.getElementById('error-toast')
-  
+
   document.getElementById('toast-close-button').addEventListener(
     'click', () => toastDiv.classList.remove('visible')
   )
+
+  const movesDiv = document.querySelector('#me-player .moves')
+
+  Array.from(movesDiv.children)
+  .forEach((move, _, moves) => move.addEventListener('click', () => {
+    if (movesDiv.classList.contains('move-picked')) {
+      return
+    }
+
+    movesDiv.classList.add('move-picked')
+    moves.forEach(move => move.classList.remove('selected'))
+    move.classList.add('selected')
+
+    // TODO: tell server what happened.
+  }))
 
   const youPlayerMovesEls = document.getElementById('you-player').getElementsByClassName('move')
 
   function messWithYouPlayerMoves() {
     const index = Math.round(Math.random() * (youPlayerMovesEls.length - 1))
-    
+
     Array.from(youPlayerMovesEls).forEach(el => el.classList.remove('selected'))
     youPlayerMovesEls.item(index).classList.add('selected')
 
@@ -109,12 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
       isError && toastDiv.classList.remove('error')
     }, time)
   }
-
-  Array.from(document.querySelectorAll('#me-player .move'))
-  .forEach((move, _, moves) => move.addEventListener('click', () => {
-    moves.forEach(move => move.classList.remove('selected'));
-    move.classList.add('selected')
-  }))
 })
 
 function navigateToPage(pageName) {
