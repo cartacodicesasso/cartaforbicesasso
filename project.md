@@ -2,12 +2,10 @@
 
 ## Ultimo step
 
-Il backend gestisce i round.
+Finito il back-end.
 
 ## Prossimo step
 
-- Refactoring del background
-- Implementare la fine del match (backend)
 - Implementare gli step mancanti nel frontend
 
 🖐️✌️👊

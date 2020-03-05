@@ -23,17 +23,15 @@ let canvas;
 let ctx;
 
 function init() {
-
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
 
-    setInterval(() => { draw(); }, 2000);
+    setInterval(draw, 2000);
 
-
-    setInterval(() => { 
-        let r = Math.round(Math.random() * 255);
-        let g = Math.round(Math.random() * 255);
-        let b = Math.round(Math.random() * 255);
+    setInterval(() => {
+        const r = Math.round(Math.random() * 255);
+        const g = Math.round(Math.random() * 255);
+        const b = Math.round(Math.random() * 255);
 
         mainColor = `rgb(${r}, ${g}, ${b})`;
     }, 2000);
@@ -59,7 +57,7 @@ function resize() {
 function draw() {
 
     ctx.fillStyle = mainColor;
-    ctx.fillRect(0,0,width, height);  
+    ctx.fillRect(0, 0, width, height);
 
     let yInit = 0;
     let xInit = 0;
@@ -142,57 +140,36 @@ function colorTriangle(color) {
 }
 
 function pickTriangleColor(rowIndex, columnIndex, columnNumber) {
-    var colorsToCheck = [];
+    const colorsToCheck = [];
 
     if (columnIndex - 1 >= 0)
         colorsToCheck.push(colorUsed[columnNumber * rowIndex + columnIndex - 1]);
     if (rowIndex - 1 >= 0)
         colorsToCheck.push(colorUsed[columnNumber * (rowIndex - 1) + columnIndex]);
 
-    let availableColors = [];
-    for (let colorFilter of colorFilters) {
-        let find = false;
-        for (let colorToCheck of colorsToCheck) {
-            if (colorFilter == colorToCheck) {
-                find = true;
-                break;
-            }
-        }
+    const availableColors = colorFilters.filter(color => !colorsToCheck.includes(color));
+    const color = pickRandomColor(rowIndex, rowNumber, availableColors);
 
-        if (!find)
-            availableColors.push(colorFilter);
-    }
-
-    let color = pickRandomColor(rowIndex, rowNumber, availableColors);
     colorUsed[columnNumber * rowIndex + columnIndex] = color;
+
     return color;
 }
 
 function pickRandomColor(rowIndex, rowNumber, availableColors) {
-    let randomPick = normal(rowIndex / rowNumber, colorRandomness, 12);
-    if (randomPick < 0)
-        randomPick = 0;
-    if (randomPick > 1)
-        randomPick = 1;
-
-    let color = availableColors[Math.trunc(randomPick * (availableColors.length - 1))];
+    const randomPick = Math.max(Math.min(normal(rowIndex / rowNumber, colorRandomness, 12), 1), 0);
+    const color = availableColors[Math.trunc(randomPick * (availableColors.length - 1))];
 
     return color;
 }
 
 function colorToRGB(color) {
-    return color > 1 ?
-        'rgb(' + 255 + ', ' + 255 + ', ' + 255 + ')'
-        :
-        'rgb(' + 0 + ', ' + 0 + ', ' + 0 + ')';
+    const value = 255 * Math.floor(color)
+    return `rgb(${value}, ${value}, ${value})`
 }
 
-function normal(mu, sigma, nsamples) {
-    if (!nsamples) nsamples = 6
-    if (!sigma) sigma = 1
-    if (!mu) mu = 0
-
+function normal(mu = 0, sigma = 1, nsamples = 6) {
     let run_total = 0
+
     for (let i = 0; i < nsamples; i++) {
         run_total += Math.random()
     }

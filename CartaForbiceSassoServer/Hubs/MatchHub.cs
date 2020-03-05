@@ -94,6 +94,31 @@ namespace CartaForbiceSassoServer.Hubs
             await Clients.Group(matchId).SendAsync("BeginMatch");
         }
 
+        public async Task ResetMatch()
+        {
+            var match = database.Matches.FirstOrDefault(m => m.Player1 == Context.ConnectionId || m.Player2 == Context.ConnectionId);
+            const string reset = "Reset";
+
+            if (match.Player1 == Context.ConnectionId)
+            {
+                match.Player1CurrentMove = reset;
+            }
+            else
+            {
+                match.Player2CurrentMove = reset;
+            }
+
+            if (match.Player1CurrentMove != reset || match.Player2CurrentMove != reset)
+            {
+                return;
+            }
+
+            match.Score1 = 3;
+            match.Score2 = 3;
+
+            await Clients.Group(match.Id).SendAsync("BeginMatch");
+        }
+
         public async Task SendMove(string move)
         {
             var match = database.Matches.FirstOrDefault(m => m.Player1 == Context.ConnectionId || m.Player2 == Context.ConnectionId);
@@ -123,9 +148,9 @@ namespace CartaForbiceSassoServer.Hubs
                 moves[(Array.IndexOf(moves, match.Player1CurrentMove) + 1) % 3] == match.Player2CurrentMove ? "player1" : "player2"
             );
 
-            var rr = "RoundResult";
-            string player1Result = "even";
-            string player2Result = "even";
+            const string rr = "RoundResult";
+            var player1Result = "even";
+            var player2Result = "even";
 
             switch (winner)
             {
