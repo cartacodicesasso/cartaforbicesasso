@@ -2,11 +2,12 @@
 
 ## Ultimo step
 
-Finito il back-end.
+Implementata fine round nel frontend
 
 ## Prossimo step
 
-- Implementare gli step mancanti nel frontend
+- In qualche modo evidenziare la fine del round
+- Implementare game over
 
 🖐️✌️👊
 

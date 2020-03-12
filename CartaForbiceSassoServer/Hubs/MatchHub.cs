@@ -10,7 +10,7 @@ namespace CartaForbiceSassoServer.Hubs
     public class MatchHub : Hub
     {
         private readonly MatchContext database;
-        private readonly string[] moves = new string[] { "rock", "paper", "scissors" };
+        private readonly string[] moves = new string[] { MoveType.Rock, MoveType.Paper, MoveType.Scissors };
 
         public MatchHub(MatchContext database)
         {
@@ -145,7 +145,7 @@ namespace CartaForbiceSassoServer.Hubs
             }
 
             var winner = match.Player1CurrentMove == match.Player2CurrentMove ? "even" : (
-                moves[(Array.IndexOf(moves, match.Player1CurrentMove) + 1) % 3] == match.Player2CurrentMove ? "player1" : "player2"
+                moves[(Array.IndexOf(moves, match.Player1CurrentMove) + 1) % 3] == match.Player2CurrentMove ? "player2" : "player1"
             );
 
             const string rr = "RoundResult";
@@ -166,16 +166,29 @@ namespace CartaForbiceSassoServer.Hubs
                     break;
             }
 
+            var p1 = Clients.Client(match.Player1).SendAsync(
+                rr,
+                player1Result,
+                match.Score1,
+                match.Score2,
+                match.Player2CurrentMove
+            );
+
+            var p2 = Clients.Client(match.Player2).SendAsync(
+                rr,
+                player2Result,
+                match.Score2,
+                match.Score1,
+                match.Player1CurrentMove
+            );
+
             match.Player1CurrentMove = null;
             match.Player2CurrentMove = null;
 
             database.Matches.Update(match);
             await database.SaveChangesAsync();
 
-            var p1 = Clients.Client(match.Player1).SendAsync(rr, player1Result, match.Score1, match.Score2);
-            var p2 = Clients.Client(match.Player2).SendAsync(rr, player2Result, match.Score2, match.Score1);
-
-            await Task.WhenAll(new Task[] { p1, p2 });
+            await Task.WhenAll(p1, p2);
         }
     }
 
@@ -184,5 +197,11 @@ namespace CartaForbiceSassoServer.Hubs
         public const string MatchNotFound = "MatchNotFound";
         public const string MatchCreationFailed = "MatchCreationFailed";
         public const string Cicciah = "Cicciah";
+    }
+
+    public static class MoveType {
+        public const string Rock = "rock";
+        public const string Paper = "paper";
+        public const string Scissors = "scissors";
     }
 }

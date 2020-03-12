@@ -5,6 +5,9 @@ document.ondragstart = () => false;
 document.addEventListener('DOMContentLoaded', () => {
   const buttonCopyMatchId = document.getElementById('copy-match-id')
   const formJoinMatch = document.getElementById('join-match-form')
+  const youPlayerMovesEls = document.getElementById('you-player').getElementsByClassName('move')
+  const youScoreEl = document.getElementById('you-score')
+  const meScoreEl = document.getElementById('me-score')
 
   const connection = new signalR.HubConnectionBuilder().withUrl('/socket').build()
   const query = window.location.search.substring(1)
@@ -59,6 +62,31 @@ document.addEventListener('DOMContentLoaded', () => {
       })
     }
 
+    connection.on('RoundResult', (result, meScore, youScore, youMove) => {
+      isYouPlayerThinking = false
+      
+      setTimeout(() => {
+        Array.from(youPlayerMovesEls).forEach(el => {
+          el.classList.remove('selected')
+  
+          if (el.id === `you-${youMove}`) {
+            el.classList.add('selected')
+          }
+        })
+      }, 100)
+
+      youScoreEl.innerHTML = new Array(youScore).fill('❤').join('')
+      meScoreEl.innerHTML = new Array(meScore).fill('❤').join('')
+
+      setTimeout(() => {
+        isYouPlayerThinking = true
+        messWithYouPlayerMoves()
+
+        movesDiv.classList.remove('move-picked')
+        Array.from(movesDiv.children).forEach(e => e.classList.remove('selected'))
+      }, 2100)
+    })
+
     connection.on('Error', error => {
       let msg = ''
 
@@ -100,16 +128,21 @@ document.addEventListener('DOMContentLoaded', () => {
     moves.forEach(move => move.classList.remove('selected'))
     move.classList.add('selected')
 
-    // TODO: tell server what happened.
+    connection
+    .invoke('SendMove', move.id)
+    .catch(e => console.log(e))
   }))
 
-  const youPlayerMovesEls = document.getElementById('you-player').getElementsByClassName('move')
-
   function messWithYouPlayerMoves() {
-    const index = Math.round(Math.random() * (youPlayerMovesEls.length - 1))
+    const targetIndex = Math.round(Math.random() * (youPlayerMovesEls.length - 1))
 
-    Array.from(youPlayerMovesEls).forEach(el => el.classList.remove('selected'))
-    youPlayerMovesEls.item(index).classList.add('selected')
+    Array.from(youPlayerMovesEls).forEach((el, index) => {
+      el.classList.remove('selected')
+
+      if (index === targetIndex) {
+        el.classList.add('selected')
+      }
+    })
 
     isYouPlayerThinking && setTimeout(messWithYouPlayerMoves, 100)
   }
