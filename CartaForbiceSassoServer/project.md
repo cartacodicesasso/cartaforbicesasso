@@ -2,12 +2,12 @@
 
 ## Ultimo step
 
-Implementata fine round nel frontend
+Abbiamo finito il gameplay
 
 ## Prossimo step
 
-- In qualche modo evidenziare la fine del round
-- Implementare game over
+- Check
+- Go-live
 
 🖐️✌️👊
 
@@ -44,14 +44,14 @@ Partite al meglio di 7.
 
 - [x] Ogni player sceglie la sua mossa
 - [x] Alla scelta della mossa, i pulsanti si congelano
-- [ ] Quando entrambi hanno scelto la mossa, viene mostrato il risultato e i pulsanti si scongelano
+- [x] Quando entrambi hanno scelto la mossa, viene mostrato il risultato e i pulsanti si scongelano
 
 ## Requisiti
 
 - [x] Dev'esserci una pagina `/` che mostra il matchId
 - [x] Dev'esserci una pagina `/?match={matchId}` che accede alla partita
 - [x] Se la partita contiene già due giocatori, cicciah
-- [ ] Il primo che arriva a 0 cuori perde
+- [x] Il primo che arriva a 0 cuori perde
 
 ## Requisiti interni
 

@@ -63,7 +63,7 @@ namespace CartaForbiceSassoServer.Hubs
 
             await Groups.AddToGroupAsync(Context.ConnectionId, match.Id);
 
-            await Clients.Caller.SendAsync("MatchCreated", match.Id);
+            await Clients.Group(match.Id).SendAsync("MatchCreated", match.Id);
         }
 
         public async Task JoinMatch(string matchId)
@@ -102,21 +102,29 @@ namespace CartaForbiceSassoServer.Hubs
             if (match.Player1 == Context.ConnectionId)
             {
                 match.Player1CurrentMove = reset;
+                match.Score1 = 3;
             }
             else
             {
                 match.Player2CurrentMove = reset;
+                match.Score2 = 3;
             }
 
-            if (match.Player1CurrentMove != reset || match.Player2CurrentMove != reset)
+            var isResetConfirmed = match.Player1CurrentMove == reset && match.Player2CurrentMove == reset;
+
+            if (isResetConfirmed)
             {
-                return;
+                match.Player1CurrentMove = null;
+                match.Player2CurrentMove = null;
             }
 
-            match.Score1 = 3;
-            match.Score2 = 3;
+            database.Matches.Update(match);
+            await database.SaveChangesAsync();
 
-            await Clients.Group(match.Id).SendAsync("BeginMatch");
+            if (isResetConfirmed)
+            {
+                await Clients.Group(match.Id).SendAsync("BeginMatch");
+            }
         }
 
         public async Task SendMove(string move)

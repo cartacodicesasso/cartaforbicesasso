@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const youPlayerMovesEls = document.getElementById('you-player').getElementsByClassName('move')
   const youScoreEl = document.getElementById('you-score')
   const meScoreEl = document.getElementById('me-score')
+  const dividerEl = document.getElementById('horizontal-divider')
+  const buttonPlayAgain = document.getElementById('play-again-button')
+  const buttonHome = document.getElementById('home-button')
 
   const connection = new signalR.HubConnectionBuilder().withUrl('/socket').build()
   const query = window.location.search.substring(1)
@@ -26,11 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .invoke('JoinMatch', query.match)
       .catch(e => console.log(e))
 
-      connection.on('BeginMatch', () => {
-        navigateToPage('game')
-        isYouPlayerThinking = true
-        requestAnimationFrame(() => messWithYouPlayerMoves())
-      })
+      attachToBeginMatchMessage()
     } else {
       connection
       .invoke('CreateMatch')
@@ -54,37 +53,37 @@ document.addEventListener('DOMContentLoaded', () => {
           url && window.open(url)
         })
 
-        connection.on('BeginMatch', () => {
-          navigateToPage('game')
-          isYouPlayerThinking = true
-          requestAnimationFrame(() => messWithYouPlayerMoves())
-        })
+        attachToBeginMatchMessage()
       })
     }
 
     connection.on('RoundResult', (result, meScore, youScore, youMove) => {
       isYouPlayerThinking = false
-      
+
       setTimeout(() => {
         Array.from(youPlayerMovesEls).forEach(el => {
-          el.classList.remove('selected')
-  
-          if (el.id === `you-${youMove}`) {
-            el.classList.add('selected')
-          }
+          el.classList.toggle('selected', el.id === `you-${youMove}`)
         })
       }, 100)
 
       youScoreEl.innerHTML = new Array(youScore).fill('❤').join('')
       meScoreEl.innerHTML = new Array(meScore).fill('❤').join('')
 
-      setTimeout(() => {
-        isYouPlayerThinking = true
-        messWithYouPlayerMoves()
+      dividerEl.classList.add('result', result)
 
-        movesDiv.classList.remove('move-picked')
-        Array.from(movesDiv.children).forEach(e => e.classList.remove('selected'))
-      }, 2100)
+      if (youScore && meScore) {
+        setTimeout(() => {
+          result === 'lose' && meScoreEl.classList.remove('damage')
+          dividerEl.classList.remove('result', result)
+          isYouPlayerThinking = true
+          messWithYouPlayerMoves()
+
+          movesDiv.classList.remove('move-picked')
+          Array.from(movesDiv.children).forEach(e => e.classList.remove('selected'))
+        }, 1600)
+      } else {
+        dividerEl.classList.add('game-over')
+      }
     })
 
     connection.on('Error', error => {
@@ -110,6 +109,14 @@ document.addEventListener('DOMContentLoaded', () => {
   })
   .catch(e => console.log(e))
 
+  buttonHome.addEventListener('click', () => {
+    window.location.href = `${window.location.protocol}//${window.location.host}`
+  })
+
+  buttonPlayAgain.addEventListener('click', () => {
+    connection.invoke('ResetMatch')
+  })
+
   const toastDiv = document.getElementById('error-toast')
 
   document.getElementById('toast-close-button').addEventListener(
@@ -132,6 +139,20 @@ document.addEventListener('DOMContentLoaded', () => {
     .invoke('SendMove', move.id)
     .catch(e => console.log(e))
   }))
+
+  function attachToBeginMatchMessage() {
+    connection.on('BeginMatch', () => {
+      youScoreEl.innerHTML = new Array(3).fill('❤').join('')
+      meScoreEl.innerHTML = new Array(3).fill('❤').join('')
+      dividerEl.classList.remove('result', 'game-over', 'win', 'lose')
+      movesDiv.classList.remove('move-picked')
+      Array.from(movesDiv.children).forEach(e => e.classList.remove('selected'))
+
+      navigateToPage('game')
+      isYouPlayerThinking = true
+      requestAnimationFrame(() => messWithYouPlayerMoves())
+    })
+  }
 
   function messWithYouPlayerMoves() {
     const targetIndex = Math.round(Math.random() * (youPlayerMovesEls.length - 1))
