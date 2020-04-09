@@ -98,13 +98,17 @@ button:hover {
     color: yellow;
 }
 
-button:active {
+button:active, button[disabled] {
     box-shadow: none;
     position: relative;
     top: 8px;
     left: 8px;
     background-color: black;
     color: yellow;
+}
+
+button[disabled] {
+    cursor: default;
 }
 
 .page {
@@ -183,7 +187,7 @@ button, input[type=submit] {
     background: #fff;
     transform: translate3d(0, 72px, 0);
     visibility: hidden;
-    padding: 1em;
+    padding: 1em 48px 1em 1em;
     text-align: center;
     font-size: 1.2rem;
     box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 0.75);

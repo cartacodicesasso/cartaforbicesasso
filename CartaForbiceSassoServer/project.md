@@ -2,12 +2,12 @@
 
 ## Ultimo step
 
-Abbiamo finito il gameplay
+MANCA POCO
 
 ## Prossimo step
 
-- Check
-- Go-live
+- Alert per i polli
+- Go-live or go home
 
 🖐️✌️👊
 

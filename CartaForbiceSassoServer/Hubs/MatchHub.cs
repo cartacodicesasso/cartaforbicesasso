@@ -29,7 +29,7 @@ namespace CartaForbiceSassoServer.Hubs
             database.Remove(match);
             await database.SaveChangesAsync();
 
-            await Clients.Group(match.Id).SendAsync("GameOver");
+            await Clients.Group(match.Id).SendAsync("YouPlayerLeft");
 
             if (match.Player1 != null)
             {

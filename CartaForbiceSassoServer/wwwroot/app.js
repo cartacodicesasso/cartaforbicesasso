@@ -1,3 +1,8 @@
+const toastType = {
+  toast: 'toast',
+  alert: 'alert'
+}
+
 document.onselectstart = () => false;
 document.oncontextmenu = () => false;
 document.ondragstart = () => false;
@@ -11,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const dividerEl = document.getElementById('horizontal-divider')
   const buttonPlayAgain = document.getElementById('play-again-button')
   const buttonHome = document.getElementById('home-button')
+  const toastCloseButton = document.getElementById('toast-close-button')
 
   const connection = new signalR.HubConnectionBuilder().withUrl('/socket').build()
   const query = window.location.search.substring(1)
@@ -42,7 +48,10 @@ document.addEventListener('DOMContentLoaded', () => {
           navigator.clipboard
           .writeText(`${location.origin}?match=${matchId}`)
           .then(
-            () => showToastMessage('Link copiato. Passalo a chi vuoi. Al suo ingresso, la partita comincerà automaticamente.', 0)
+            () => showToastMessage(
+              toastType.toast,
+              'The link was copied. Share it with your friends. When they arrive, the match will begin automatically.'
+            )
           )
         })
 
@@ -86,6 +95,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     })
 
+    connection.on('YouPlayerLeft', () => {
+      showToastMessage(
+        toastType.alert, 'Your opponent left. Chicken.', null, true
+      )
+    })
+
     connection.on('Error', error => {
       let msg = ''
 
@@ -104,16 +119,17 @@ document.addEventListener('DOMContentLoaded', () => {
           break
       }
 
-      showToastMessage(msg, undefined, true)
+      showToastMessage(toastType.message, msg, null, true)
     })
   })
   .catch(e => console.log(e))
 
   buttonHome.addEventListener('click', () => {
-    window.location.href = `${window.location.protocol}//${window.location.host}`
+    window.location.href = '/'
   })
 
   buttonPlayAgain.addEventListener('click', () => {
+    buttonPlayAgain.disabled = true
     connection.invoke('ResetMatch')
   })
 
@@ -142,10 +158,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function attachToBeginMatchMessage() {
     connection.on('BeginMatch', () => {
+      showToastMessage(toastType.toast, '', 0)
+
       youScoreEl.innerHTML = new Array(3).fill('❤').join('')
       meScoreEl.innerHTML = new Array(3).fill('❤').join('')
       dividerEl.classList.remove('result', 'game-over', 'win', 'lose')
       movesDiv.classList.remove('move-picked')
+      buttonPlayAgain.disabled = false
+      
       Array.from(movesDiv.children).forEach(e => e.classList.remove('selected'))
 
       navigateToPage('game')
@@ -168,15 +188,21 @@ document.addEventListener('DOMContentLoaded', () => {
     isYouPlayerThinking && setTimeout(messWithYouPlayerMoves, 100)
   }
 
-  function showToastMessage(msg, time = 5000, isError = false) {
+  function showToastMessage(type, msg, time = 5000, isError = false, onClick = closeToastMessage) {
     toastDiv.classList.add('visible')
     isError && toastDiv.classList.add('error')
     toastDiv.firstElementChild.innerHTML = msg
+    
+    type === toastType.toast && time !== null && setTimeout(closeToastMessage, time)
 
-    time && setTimeout(() => {
-      toastDiv.classList.remove('visible')
-      isError && toastDiv.classList.remove('error')
-    }, time)
+    toastCloseButton.addEventListener('click', function clickListener() {
+      onClick()
+      toastCloseButton.removeEventListener('click', clickListener)
+    })
+  }
+
+  function closeToastMessage() {
+    toastDiv.classList.remove('visible', 'error')
   }
 })
 
