@@ -2,11 +2,10 @@
 
 ## Ultimo step
 
-MANCA POCO
+MANCA PIÙ POCO
 
 ## Prossimo step
 
-- Alert per i polli
 - Go-live or go home
 
 🖐️✌️👊

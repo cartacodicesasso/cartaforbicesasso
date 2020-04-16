@@ -26,6 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
     [key]: value
   }), {})
 
+  window.history.replaceState(null, '', window.location.href.split('?').shift())
+
   let isYouPlayerThinking = false
 
   connection.start()
@@ -97,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     connection.on('YouPlayerLeft', () => {
       showToastMessage(
-        toastType.alert, 'Your opponent left. Chicken.', null, true
+        toastType.alert, 'Your opponent left. Chicken. Refresh the page to restart.', null, true
       )
     })
 
@@ -142,19 +144,37 @@ document.addEventListener('DOMContentLoaded', () => {
   const movesDiv = document.querySelector('#me-player .moves')
 
   Array.from(movesDiv.children)
-  .forEach((move, _, moves) => move.addEventListener('click', () => {
-    if (movesDiv.classList.contains('move-picked')) {
-      return
-    }
+  .forEach((move, _, moves) => {
+    move.addEventListener('click', () => {
+      if (movesDiv.classList.contains('move-picked')) {
+        return
+      }
 
-    movesDiv.classList.add('move-picked')
-    moves.forEach(move => move.classList.remove('selected'))
-    move.classList.add('selected')
+      movesDiv.classList.add('move-picked')
+      moves.forEach(move => move.classList.remove('selected'))
+      move.classList.add('selected')
 
-    connection
-    .invoke('SendMove', move.id)
-    .catch(e => console.log(e))
-  }))
+      connection
+      .invoke('SendMove', move.id)
+      .catch(e => console.log(e))
+    })
+
+    move.addEventListener('mouseover', () => {
+      if (movesDiv.classList.contains('move-picked')) {
+        return
+      }
+
+      move.classList.add('selected')
+    })
+
+    move.addEventListener('mouseleave', () => {
+      if (movesDiv.classList.contains('move-picked')) {
+        return
+      }
+
+      move.classList.remove('selected')
+    })
+  })
 
   function attachToBeginMatchMessage() {
     connection.on('BeginMatch', () => {
@@ -165,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
       dividerEl.classList.remove('result', 'game-over', 'win', 'lose')
       movesDiv.classList.remove('move-picked')
       buttonPlayAgain.disabled = false
-      
+
       Array.from(movesDiv.children).forEach(e => e.classList.remove('selected'))
 
       navigateToPage('game')
@@ -189,10 +209,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function showToastMessage(type, msg, time = 5000, isError = false, onClick = closeToastMessage) {
+    toastDiv.parentElement.classList.add(type)
     toastDiv.classList.add('visible')
     isError && toastDiv.classList.add('error')
     toastDiv.firstElementChild.innerHTML = msg
-    
+
     type === toastType.toast && time !== null && setTimeout(closeToastMessage, time)
 
     toastCloseButton.addEventListener('click', function clickListener() {
@@ -202,6 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function closeToastMessage() {
+    toastDiv.parentElement.classList.remove(...Object.values(toastType))
     toastDiv.classList.remove('visible', 'error')
   }
 })
