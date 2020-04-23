@@ -424,7 +424,7 @@ button + button {
     transform: scale(1.5);
 }
 
-#me-score.damage {
+.score.damage {
     animation: damage-vibe .8s linear, damage-color .8s step-start;
 }
 

@@ -2,11 +2,7 @@
 
 ## Ultimo step
 
-MANCA PIÙ POCO
-
-## Prossimo step
-
-- Go-live or go home
+Finitoh
 
 🖐️✌️👊
 

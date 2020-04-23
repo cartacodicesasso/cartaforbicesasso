@@ -83,8 +83,19 @@ document.addEventListener('DOMContentLoaded', () => {
       dividerEl.classList.add('result', result)
 
       if (youScore && meScore) {
+        if (result === 'win') {
+          youScoreEl.classList.add('damage')
+        } else if (result === 'lose') {
+          meScoreEl.classList.add('damage')
+        }
+
         setTimeout(() => {
-          result === 'lose' && meScoreEl.classList.remove('damage')
+          if (result === 'win') {
+            youScoreEl.classList.remove('damage')
+          } else if (result === 'lose') {
+            meScoreEl.classList.remove('damage')
+          }
+
           dividerEl.classList.remove('result', result)
           isYouPlayerThinking = true
           messWithYouPlayerMoves()
