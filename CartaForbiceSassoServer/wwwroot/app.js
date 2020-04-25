@@ -7,6 +7,12 @@ document.onselectstart = () => false;
 document.oncontextmenu = () => false;
 document.ondragstart = () => false;
 
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js')
+    .then(() => console.log('sw registered'))
+    .catch(() => console.log('sw error'));
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const buttonCopyMatchId = document.getElementById('copy-match-id')
   const formJoinMatch = document.getElementById('join-match-form')
