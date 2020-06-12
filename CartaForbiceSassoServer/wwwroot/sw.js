@@ -1,4 +1,4 @@
-self.addEventListener('install', e =>
+addEventListener('install', e =>
   e.waitUntil(
     caches.open('cfs').then(cache =>
       cache.addAll([
@@ -17,7 +17,7 @@ self.addEventListener('install', e =>
   )
 )
 
-self.addEventListener('fetch', e =>
+addEventListener('fetch', e =>
   e.respondWith(
     caches.match(e.request)
       .then(res => res || fetch(e.request))
